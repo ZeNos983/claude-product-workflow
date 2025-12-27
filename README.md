@@ -1,0 +1,261 @@
+# Claude Product Workflow
+
+> A comprehensive 5-agent product development workflow for Claude Code
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Claude Code](https://img.shields.io/badge/Claude-Code-blueviolet)](https://docs.anthropic.com/en/docs/claude-code)
+
+Transform your product ideas into development-ready documentation with AI-powered agents that handle market research, design specifications, technical architecture, project planning, and developer guides.
+
+## Features
+
+- **5 Specialized Agents**: Product Manager, UIUX Designer, Product Architect, Project Manager, Dev Guide Generator
+- **Full Pipeline Orchestration**: Single command to generate all documentation
+- **Quality Gates**: User approval points between major phases
+- **Auto-Synchronization**: Documents stay in sync when requirements change
+- **Standardized Templates**: Consistent, version-controlled documentation
+- **Developer-Ready Output**: Actionable guides with task tracking
+
+## Quick Start
+
+### Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/yourusername/claude-product-workflow.git
+
+# Run the install script
+cd claude-product-workflow
+./install.sh  # macOS/Linux
+# or
+.\install.ps1  # Windows PowerShell
+```
+
+### Manual Installation
+
+Copy the directories to your Claude Code config:
+
+```bash
+# macOS/Linux
+cp -r templates ~/.claude/
+cp -r agents ~/.claude/
+cp -r commands ~/.claude/
+cp -r skills ~/.claude/
+
+# Windows
+xcopy /E templates %USERPROFILE%\.claude\templates\
+xcopy /E agents %USERPROFILE%\.claude\agents\
+xcopy /E commands %USERPROFILE%\.claude\commands\
+xcopy /E skills %USERPROFILE%\.claude\skills\
+```
+
+## Usage
+
+### Full Pipeline
+
+Initialize a complete product development workflow:
+
+```bash
+/product-init my-awesome-app "A task management app for remote teams"
+```
+
+This runs through all 5 phases with approval gates:
+
+1. **Discovery** - Requirements clarification
+2. **PRD** - Market research and product requirements
+3. **UIUX** - Design specifications
+4. **Architecture** - Technical design
+5. **Planning** - Task breakdown
+6. **Dev Guide** - Developer documentation
+
+### Individual Commands
+
+Run specific phases independently:
+
+```bash
+/product-prd my-app              # Generate PRD only
+/product-uiux my-app             # Generate UIUX specs (requires PRD)
+/product-architect my-app        # Generate architecture (requires PRD, UIUX)
+/product-plan my-app             # Generate TODO (requires all prior)
+/product-dev my-app              # Generate dev guide (requires all)
+/product-sync my-app             # Sync all documents
+```
+
+### Update Mode
+
+Update existing documents when requirements change:
+
+```bash
+/product-prd my-app --update     # Update PRD
+/product-sync my-app             # Cascade updates to all documents
+```
+
+## Generated Documents
+
+After running `/product-init`, you'll have:
+
+```
+./products/my-awesome-app/
+├── manifest.json           # Version tracking and sync status
+├── prd/
+│   └── PRD.md              # Product Requirements Document
+├── uiux/
+│   ├── UIUX.md             # UI/UX Specifications
+│   ├── components/         # Component details
+│   └── assets/             # SVG graphics
+├── architecture/
+│   ├── ARCHITECTURE.md     # Technical Architecture
+│   └── diagrams/           # System diagrams
+├── project/
+│   ├── TODO.md             # Task List with priorities
+│   └── milestones.json     # Milestone tracking
+└── development/
+    └── CLAUDE.md           # Developer Guide
+```
+
+## Agent Responsibilities
+
+### Product Manager Agent
+- Conducts market research using web search
+- Analyzes 3+ competitors
+- Creates user personas
+- Defines features with MoSCoW prioritization
+- Documents user flows with Mermaid diagrams
+
+### UIUX Designer Agent
+- Designs information architecture
+- Creates page layouts and components
+- Specifies interactions and states
+- Ensures WCAG accessibility
+- References [designprompts.dev](https://www.designprompts.dev/) patterns
+
+### Product Architect Agent
+- Selects technology stack with rationale
+- Designs system architecture
+- Creates database schemas and API contracts
+- Plans security measures
+- Uses Context7 for library documentation
+
+### Project Manager Agent
+- Breaks features into actionable tasks
+- Assigns P0-P3 priorities
+- Maps task dependencies
+- Defines milestones
+- Estimates effort (max 16h per task)
+
+### Dev Guide Generator Agent
+- Synthesizes all documentation
+- Creates quick start guide (< 5 min setup)
+- Documents code standards
+- Sets up auto-sync mechanism
+- Integrates task list from TODO
+
+## Workflow Diagram
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    /product-init                             │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│  Phase 1: Discovery                                         │
+│  └── Requirements clarification (Quality Gate: 80+ clarity) │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│  Phase 2: PRD Generation                                    │
+│  └── Market research + Feature definition                   │
+│  🛑 USER APPROVAL REQUIRED                                  │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│  Phase 3: UIUX Design                                       │
+│  └── Pages, components, interactions                        │
+│  🛑 USER APPROVAL REQUIRED                                  │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│  Phase 4: Architecture                                      │
+│  └── Tech stack, system design, APIs                        │
+│  🛑 USER APPROVAL REQUIRED                                  │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│  Phase 5: Project Planning                                  │
+│  └── Tasks, priorities, dependencies                        │
+│  🛑 USER APPROVAL REQUIRED                                  │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│  Phase 6: Dev Guide                                         │
+│  └── CLAUDE.md with auto-sync                               │
+│  ✅ COMPLETE                                                │
+└─────────────────────────────────────────────────────────────┘
+```
+
+## Synchronization
+
+Documents are linked with version dependencies. When a source document changes:
+
+```
+PRD changes
+    │
+    ├──► UIUX updates
+    │     │
+    │     └──► Architecture updates
+    │           │
+    │           └──► TODO updates
+    │                 │
+    │                 └──► CLAUDE.md updates
+```
+
+Run `/product-sync my-app` to cascade updates, or use `--dry-run` to preview changes.
+
+## Templates
+
+All documents use standardized templates located in `~/.claude/templates/`:
+
+| Template | Description |
+|----------|-------------|
+| `prd-template.md` | Product Requirements with YAML frontmatter |
+| `uiux-template.md` | Design specs with component library |
+| `architecture-template.md` | Tech architecture with decision records |
+| `todo-template.md` | Task list with dependency graph |
+| `claude-md-template.md` | Developer guide with auto-sync |
+
+## Requirements
+
+- Claude Code CLI installed
+- Internet access (for market research)
+- Optional: Context7 MCP for library docs
+- Optional: Serena MCP for codebase analysis
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Acknowledgments
+
+- [Design Prompts](https://www.designprompts.dev/) for UI/UX best practices
+- [Mermaid](https://mermaid.js.org/) for diagram syntax
+- Claude Code team for the extension platform
+
+---
+
+Made with AI by the Claude Code community
